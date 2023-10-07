@@ -17,13 +17,14 @@ type SimulationInput = {
 type SimulationResult = {
   yearsToSideFire: number;
   finalSavings: number;
+  futureSavingsHistory: number[];
 };
 
 const SimulationComponent: React.FC<SimulationComponentProps> = ({ currentSavings, currentSalary, currentInvestmentReturnRate }) => {
   const [savings, setSavings] = useState(currentSavings);
   const [salary, setSalary] = useState(currentSalary);
   const [investmentReturnRate, setInvestmentReturnRate] = useState(currentInvestmentReturnRate);
-  const [simulationResult, setSimulationResult] = useState<SimulationResult>({ yearsToSideFire: 0, finalSavings: 0 });
+  const [simulationResult, setSimulationResult] = useState<SimulationResult>({ yearsToSideFire: 0, finalSavings: 0, futureSavingsHistory: [] });
 
   const handleSavingsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSavings(Number(event.target.value));
@@ -46,18 +47,22 @@ const SimulationComponent: React.FC<SimulationComponentProps> = ({ currentSaving
     let yearsToSideFire = 0;
     let futureSavings = currentSavings;
 
-    const targetSavings = currentSalary * 25; // サイドFIREの目標額（25倍の年収）
+    // const targetSavings = currentSalary * 25; // サイドFIREの目標額（25倍の年収）
+    const targetSavings = 45000000; // 一旦単身用のシミュレーションとして45000万固定、いずれ他の条件を考慮しても表地が変わるように修正
     const annualSavings = currentSalary * 0.2; // 年間の貯金額（年収の20%と仮定）
+    const futureSavingsHistory: number[] = [annualSavings];
 
     while (futureSavings < targetSavings) {
       futureSavings += annualSavings; // 年間の貯金を追加
       futureSavings *= 1 + currentInvestmentReturnRate / 100; // 投資利回りを考慮
       yearsToSideFire++;
+      futureSavingsHistory.push(futureSavings);
     }
 
     return {
       yearsToSideFire: yearsToSideFire,
       finalSavings: futureSavings,
+      futureSavingsHistory: futureSavingsHistory,
     };
   };
 
@@ -71,22 +76,33 @@ const SimulationComponent: React.FC<SimulationComponentProps> = ({ currentSaving
       SimulationComponent Component
 
       {/* 現在の貯金額を入力 */}
-      <p>現在の貯金額: {currentSavings}</p>
+      <p>現在の貯金額: {currentSavings.toLocaleString()}円</p>
       <label htmlFor="savings-input">現在の貯金額を入力:</label>
       <input id="savings-input" type="number" value={savings} onChange={handleSavingsChange} />
 
       {/* 現在の年収を入力 */}
-      <p>現在の年収: {currentSalary}</p>
+      <p>現在の年収: {currentSalary.toLocaleString()}円</p>
       <label htmlFor="salary-input">年収を入力:</label>
       <input id="salary-input" type="number" value={salary} onChange={handleSalaryChange} />
 
       {/* 投資利回りを入力 */}
-      <p>現在の投資利回り: {currentInvestmentReturnRate}</p>
+      <p>現在の投資利回り: {currentInvestmentReturnRate}%</p>
       <label htmlFor="investment-return-rate-input">投資利回りを入力:</label>
       <input id="investment-return-rate-input" type="number" value={investmentReturnRate} onChange={handleInvestmentReturnRateChange} />
 
       <p>サイドFIREまで残り {simulationResult.yearsToSideFire}年</p>
-      <p>サイドFIRE時の資産 {Math.floor(simulationResult.finalSavings)}円</p>
+      <p>サイドFIRE時の資産 {Math.floor(simulationResult.finalSavings).toLocaleString()}円</p>
+      <p>サイドFIREまでの資産推移</p>
+      <ul>
+        {simulationResult.futureSavingsHistory.map((savings, index) => (
+          <li key={index}>{Math.floor(savings).toLocaleString()}円</li>
+        ))}
+      </ul>
+      <p>4%ルールに基づいて算出しています。（年間支出は180万円想定）</p>
+      {/*
+      単身の年間支出平均は180万らしい（2,3,4人では？）
+      逆算すると4%ルールだと180万×25=4500万必要
+      */}
 
       <button onClick={handleCalculateClick}>Calculate</button>
 
