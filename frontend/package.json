@@ -10,6 +10,7 @@
     "@types/node": "^16.18.57",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.10",
+    "chart.js": "^4.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.38"
   }
 }
