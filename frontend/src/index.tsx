@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { extendTheme, ChakraProvider } from '@chakra-ui/react'
+import { extendTheme, ChakraProvider, Container } from '@chakra-ui/react'
 
 
 const colors = {
@@ -26,7 +26,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <ChakraProvider theme={theme}>
-    <App />
+    <Container maxW='800px'>
+      <App />
+    </Container>
   </ChakraProvider>
 );
 
