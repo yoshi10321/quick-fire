@@ -4,14 +4,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-
-  /* タブレット用のスタイル */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    body {
-      max-width: 90%;
-    }
-  }
 }
 
 code {

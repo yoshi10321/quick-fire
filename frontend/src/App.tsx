@@ -8,9 +8,9 @@ function App() {
   const currentInvestmentReturnRate = 5; // replace with your desired value
   const currentAverageAnnualExpenditure = 1800000; // replace with your desired value
   return (
-    <Box padding={10}>
+    <Box>
       <div className="App">
-        <Heading mb={5} size='md'>サイドFIREシミュレーション</Heading>
+        <Heading mt={5} mb={5} size='md'>サイドFIREシミュレーション</Heading>
         <SimulationComponent currentSavings={currentSavings} currentSalary={currentSalary} currentInvestmentReturnRate={currentInvestmentReturnRate} currentAverageAnnualExpenditure={currentAverageAnnualExpenditure} />
       </div>
     </Box>
