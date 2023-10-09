@@ -1,6 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import './SimulationComponent.css';
-import AssetGrowthChartComponent from '../AssetGrowthChartComponent/AssetGrowthChartComponent';
+import React, { useState, useEffect } from "react";
+import "./SimulationComponent.css";
+import AssetGrowthChartComponent from "../AssetGrowthChartComponent/AssetGrowthChartComponent";
+import {
+  Input,
+  Text,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  Box,
+  AccordionPanel,
+  AccordionItem,
+  Stack,
+  Card,
+  CardBody,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Tooltip,
+} from "@chakra-ui/react";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
 
 interface SimulationComponentProps {
   currentSavings: number;
@@ -24,27 +44,45 @@ type SimulationResult = {
   futureSavingsHistoryYears: number[];
 };
 
-const SimulationComponent: React.FC<SimulationComponentProps> = ({ currentSavings, currentSalary, currentInvestmentReturnRate, currentAverageAnnualExpenditure = 1800000 }) => {
+const SimulationComponent: React.FC<SimulationComponentProps> = ({
+  currentSavings,
+  currentSalary,
+  currentInvestmentReturnRate,
+  currentAverageAnnualExpenditure = 1800000,
+}) => {
   const [savings, setSavings] = useState(currentSavings);
   const [salary, setSalary] = useState(currentSalary);
-  const [investmentReturnRate, setInvestmentReturnRate] = useState(currentInvestmentReturnRate);
-  const [averageAnnualExpenditure, setAverageAnnualExpenditure] = useState(currentAverageAnnualExpenditure);
-  const [simulationResult, setSimulationResult] = useState<SimulationResult>({ yearsToSideFire: 0, finalSavings: 0, futureSavingsHistory: [], futureSavingsHistoryYears: [] });
+  const [investmentReturnRate, setInvestmentReturnRate] = useState(
+    currentInvestmentReturnRate
+  );
+  const [averageAnnualExpenditure, setAverageAnnualExpenditure] = useState(
+    currentAverageAnnualExpenditure
+  );
+  const [simulationResult, setSimulationResult] = useState<SimulationResult>({
+    yearsToSideFire: 0,
+    finalSavings: 0,
+    futureSavingsHistory: [],
+    futureSavingsHistoryYears: [],
+  });
 
-  const handleSavingsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSavings(Number(event.target.value));
+  const handleSavingsChange = (valueAsString: string, valueAsNumber: number) => {
+    setSavings(valueAsNumber);
   };
 
-  const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSalary(Number(event.target.value));
+  const handleSalaryChange = (valueAsString: string, valueAsNumber: number) => {
+    setSalary(valueAsNumber);
   };
 
-  const handleInvestmentReturnRateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInvestmentReturnRate(Number(event.target.value));
+  const handleInvestmentReturnRateChange = (
+    valueAsString: string, valueAsNumber: number
+  ) => {
+    setInvestmentReturnRate(Number(valueAsNumber));
   };
 
-  const handleAverageAnnualExpenditureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAverageAnnualExpenditure(Number(event.target.value));
+  const handleAverageAnnualExpenditureChange = (
+    valueAsString: string, valueAsNumber: number
+  ) => {
+    setAverageAnnualExpenditure(valueAsNumber);
   };
 
   const calculateSideFire = ({
@@ -69,7 +107,7 @@ const SimulationComponent: React.FC<SimulationComponentProps> = ({ currentSaving
       futureSavings *= 1 + currentInvestmentReturnRate / 100; // 投資利回りを考慮
       yearsToSideFire++;
       futureSavingsHistory.push(Math.floor(futureSavings));
-      futureSavingsHistoryYears.push(currentYear + yearsToSideFire)
+      futureSavingsHistoryYears.push(currentYear + yearsToSideFire);
     }
 
     return {
@@ -81,56 +119,90 @@ const SimulationComponent: React.FC<SimulationComponentProps> = ({ currentSaving
   };
 
   useEffect(() => {
-    const result = calculateSideFire({ currentSavings: savings, currentSalary: salary, currentInvestmentReturnRate: investmentReturnRate, averageAnnualExpenditure: averageAnnualExpenditure });
+    const result = calculateSideFire({
+      currentSavings: savings,
+      currentSalary: salary,
+      currentInvestmentReturnRate: investmentReturnRate,
+      averageAnnualExpenditure: averageAnnualExpenditure,
+    });
     setSimulationResult(result);
   }, [savings, salary, investmentReturnRate, averageAnnualExpenditure]);
 
   return (
     <div className="SimulationComponent" data-testid="SimulationComponent">
       {/* 現在の資産額を入力 */}
-      <p>
-        <label htmlFor="savings-input">現在の資産額を入力: </label>
-        <input id="savings-input" type="number" value={savings} onChange={handleSavingsChange} />
-      </p>
+      <Stack spacing={3}>
+        <Card>
+          <CardBody>
+            <Stack spacing={3}>
+              <Text>現在の資産額: {savings}円</Text>
+              <NumberInput maxW="200px" onChange={handleSavingsChange} value={savings} defaultValue={savings}>
+                <NumberInputField id="savings-input"  />
+              </NumberInput>
 
-      {/* 現在の年収を入力 */}
-      <p>
-        <label htmlFor="salary-input">年収を入力: </label>
-        <input id="salary-input" type="number" value={salary} onChange={handleSalaryChange} />
-      </p>
+              {/* 現在の年収を入力 */}
+              <Text>年収: {salary}円</Text>
+              <NumberInput maxW="200px" onChange={handleSalaryChange} value={salary} defaultValue={salary}>
+                <NumberInputField id="salary-input" />
+              </NumberInput>
 
-      {/* 投資利回りを入力 */}
-      <p>
-        <label htmlFor="investment-return-rate-input">投資利回りを入力: </label>
-        <input id="investment-return-rate-input" type="number" value={investmentReturnRate} onChange={handleInvestmentReturnRateChange} />
-      </p>
+              {/* 投資利回りを入力 */}
+              <Text>投資利回り: {investmentReturnRate}%</Text>
+              <NumberInput maxW="200px" step={0.1} onChange={handleInvestmentReturnRateChange} value={investmentReturnRate} defaultValue={investmentReturnRate}>
+                <NumberInputField id="investment-return-rate-input" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
 
-      {/* この下はオプション */}
-      <p>
-        <label htmlFor="average-annual-expenditure-input">年間支出平均金額を入力: </label>
-        <input id="average-annual-expenditure-input" type="number" value={averageAnnualExpenditure} onChange={handleAverageAnnualExpenditureChange} />
-      </p>
+              </NumberInput>
 
+              {/* この下はオプション */}
+              <Accordion allowToggle>
+                <AccordionItem>
+                  <h2>
+                    <AccordionButton>
+                      <Box as="span" flex="1" textAlign="left">
+                        その他の設定
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    <Text>年間支出金額: {averageAnnualExpenditure}円</Text>
+                    <Text fontSize='xs'>単身の年間支出平均は180万円</Text>
+                    <NumberInput maxW="200px" value={averageAnnualExpenditure} onChange={handleAverageAnnualExpenditureChange}>
+                      <NumberInputField id="average-annual-expenditure-input" />
+                    </NumberInput>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </Stack>
+          </CardBody>
+        </Card>
 
-      <p>サイドFIREまで残り {simulationResult.yearsToSideFire}年</p>
-      <p>サイドFIRE時の資産 {Math.floor(simulationResult.finalSavings).toLocaleString()}円</p>
-      <AssetGrowthChartComponent years={simulationResult.futureSavingsHistoryYears} futureSavingsHistory={simulationResult.futureSavingsHistory} />
-      <p>4%ルールに基づいて算出しています。（年間支出は180万円想定）</p>
-      <p>年間の貯金額を年収の20%と仮定して算出しています。</p>
+        <Card>
+          <CardBody>
+            <Text>サイドFIREまで {simulationResult.yearsToSideFire}年</Text>
+            <Text>
+              サイドFIRE時の資産{" "}
+              {Math.floor(simulationResult.finalSavings).toLocaleString()}円
+            </Text>
+            <AssetGrowthChartComponent
+              years={simulationResult.futureSavingsHistoryYears}
+              futureSavingsHistory={simulationResult.futureSavingsHistory}
+            />
+            <Text fontSize='xs'>※4%ルールに基づいて算出しています。</Text>
+            <Text fontSize='xs'>※年間の貯金額を年収の20%と仮定して算出しています。</Text>
+          </CardBody>
+        </Card>
+      </Stack>
       {/*
       単身の年間支出平均は180万らしい（2,3,4人では？）
       逆算すると4%ルールだと180万×25=4500万必要
       */}
-
-      {/* <p>サイドFIREまでの資産推移</p>
-      <ul>
-        {simulationResult.futureSavingsHistory.map((savings, index) => (
-          <li key={index}>{Math.floor(savings).toLocaleString()}円</li>
-        ))}
-      </ul> */}
-
     </div>
   );
-}
+};
 
 export default SimulationComponent;

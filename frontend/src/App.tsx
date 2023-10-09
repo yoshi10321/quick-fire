@@ -1,3 +1,4 @@
+import { Box, Heading } from '@chakra-ui/react';
 import './App.css';
 import SimulationComponent from './components/SimulationComponent/SimulationComponent';
 
@@ -7,14 +8,12 @@ function App() {
   const currentInvestmentReturnRate = 5; // replace with your desired value
   const currentAverageAnnualExpenditure = 1800000; // replace with your desired value
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          サイドFIREシミュレーション
-        </p>
-      </header>
-      <SimulationComponent currentSavings={currentSavings} currentSalary={currentSalary} currentInvestmentReturnRate={currentInvestmentReturnRate} currentAverageAnnualExpenditure={currentAverageAnnualExpenditure} />
-    </div>
+    <Box padding={10}>
+      <div className="App">
+        <Heading mb={5} size='md'>サイドFIREシミュレーション</Heading>
+        <SimulationComponent currentSavings={currentSavings} currentSalary={currentSalary} currentInvestmentReturnRate={currentInvestmentReturnRate} currentAverageAnnualExpenditure={currentAverageAnnualExpenditure} />
+      </div>
+    </Box>
   );
 }
 
