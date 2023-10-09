@@ -6,6 +6,15 @@
 
 https://stackoverflow.com/questions/51942009/best-way-to-create-new-react-component-using-create-react-app
 
+## デプロイ
+frontendディレクトリ配下で
+
+`npm run deploy`
+
+github pagesにデプロイされる
+
+https://yoshi10321.github.io/quick-fire/
+
 
 # Getting Started with Create React App
 
